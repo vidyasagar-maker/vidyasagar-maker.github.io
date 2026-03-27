@@ -8,3 +8,90 @@
     <p>Yeh meri pehli free website hai</p>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Search Demo Website</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #f9f9f9; }
+        h1, h2 { text-align: center; color: #333; }
+        section { background: white; padding: 15px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input[type=text] { width: 100%; padding: 8px; margin: 10px 0; border-radius: 4px; border: 1px solid #ccc; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 15px; background: #e7f3ff; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <h1>Search Your Data</h1>
+
+    <!-- Mobile Number Search Section -->
+    <section>
+        <h2>Mobile Number Search</h2>
+        <label for="mobileInput">Enter Mobile Number:</label>
+        <input type="text" id="mobileInput" placeholder="e.g. 9876543210" />
+        <button onclick="searchMobile()">Search</button>
+        <div id="mobileResult" class="result" style="display:none;"></div>
+    </section>
+
+    <!-- Bank Account Search Section -->
+    <section>
+        <h2>Bank Account Search</h2>
+        <label for="accountInput">Enter Bank Account Number:</label>
+        <input type="text" id="accountInput" placeholder="e.g. 123456789012" />
+        <button onclick="searchAccount()">Search</button>
+        <div id="accountResult" class="result" style="display:none;"></div>
+    </section>
+
+    <script>
+        // Dummy mobile data for demo
+        const mobileDatabase = {
+            "9876543210": "Name: Rahul Sharma, Location: Delhi",
+            "9123456789": "Name: Priya Singh, Location: Mumbai"
+        };
+
+        // Dummy bank account data for demo
+        const bankDatabase = {
+            "123456789012": "Bank: SBI, Account Holder: Rahul Sharma",
+            "987654321098": "Bank: HDFC, Account Holder: Priya Singh"
+        };
+
+        function searchMobile() {
+            const input = document.getElementById('mobileInput').value.trim();
+            const resultDiv = document.getElementById('mobileResult');
+            if(input === "") {
+                alert("Please enter a mobile number");
+                return;
+            }
+            if(mobileDatabase[input]) {
+                resultDiv.style.display = "block";
+                resultDiv.textContent = "Result: " + mobileDatabase[input];
+            } else {
+                resultDiv.style.display = "block";
+                resultDiv.textContent = "No record found for this mobile number.";
+            }
+        }
+
+        function searchAccount() {
+            const input = document.getElementById('accountInput').value.trim();
+            const resultDiv = document.getElementById('accountResult');
+            if(input === "") {
+                alert("Please enter a bank account number");
+                return;
+            }
+            if(bankDatabase[input]) {
+                resultDiv.style.display = "block";
+                resultDiv.textContent = "Result: " + bankDatabase[input];
+            } else {
+                resultDiv.style.display = "block";
+                resultDiv.textContent = "No record found for this account number.";
+            }
+        }
+    </script>
+
+</body>
+</html>
