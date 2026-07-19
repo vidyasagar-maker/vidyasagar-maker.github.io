@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vidya Premium — Enterprise AI Chat</title>
+<title>Vidya AI Premium — v2.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -85,6 +85,21 @@ nav{
   -webkit-text-fill-color:transparent;
   background-clip:text;
   text-decoration:none;
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+}
+
+.logo .ver{
+  font-family:'Inter',sans-serif;
+  font-size:0.7rem;
+  font-weight:700;
+  color:var(--text-muted);
+  -webkit-text-fill-color:var(--text-muted);
+  background:rgba(99,102,241,0.12);
+  padding:2px 8px;
+  border-radius:100px;
+  letter-spacing:0.5px;
 }
 
 .nav-r{
@@ -116,18 +131,7 @@ nav{
   box-shadow:0 12px 32px rgba(99,102,241,0.45);
 }
 
-.page{
-  display:none;
-  min-height:100vh;
-  position:relative;
-  z-index:1;
-}
-
-.page.active{
-  display:block;
-}
-
-#app.active{
+#app{
   display:grid;
   grid-template-columns:300px 1fr;
   height:100vh;
@@ -230,62 +234,9 @@ nav{
 .sidebar-bottom{
   padding:18px 24px;
   border-top:1.5px solid var(--border);
-}
-
-.user-pill{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px;
-  border-radius:var(--radius-lg);
-  background:rgba(99,102,241,0.08);
-  border:1px solid rgba(99,102,241,0.2);
-}
-
-.avatar{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1rem;
-  font-weight:700;
-  color:#fff;
-}
-
-.user-info{
-  flex:1;
-}
-
-.user-name{
-  font-size:0.9rem;
-  font-weight:700;
-  color:var(--text-primary);
-}
-
-.user-email{
-  font-size:0.8rem;
+  font-size:0.78rem;
   color:var(--text-muted);
-}
-
-.logout-btn{
-  background:none;
-  border:none;
-  color:var(--text-muted);
-  cursor:pointer;
-  font-size:0.8rem;
-  padding:6px 10px;
-  border-radius:var(--radius-sm);
-  transition:var(--transition-fast);
-  font-family:'Inter',sans-serif;
-  font-weight:600;
-}
-
-.logout-btn:hover{
-  color:var(--danger);
-  background:rgba(239,68,68,0.1);
+  text-align:center;
 }
 
 .chat-main{
@@ -312,7 +263,6 @@ nav{
   background:transparent;
   font-size:0.8rem;
   color:var(--accent-primary);
-  cursor:pointer;
   font-weight:700;
   letter-spacing:0.3px;
   box-shadow:0 0 12px rgba(99,102,241,0.2);
@@ -448,6 +398,7 @@ nav{
   line-height:1.8;
   max-width:720px;
   word-wrap:break-word;
+  white-space:pre-wrap;
 }
 
 .msg.ai .bubble{
@@ -459,6 +410,20 @@ nav{
   background:linear-gradient(135deg, var(--accent-primary), #7c3aed);
   color:#fff;
   box-shadow:0 8px 20px rgba(99,102,241,0.3);
+}
+
+.bubble .cursor{
+  display:inline-block;
+  width:2px;
+  height:1em;
+  background:var(--accent-secondary);
+  margin-left:2px;
+  vertical-align:middle;
+  animation:blink 0.9s step-start infinite;
+}
+
+@keyframes blink{
+  50%{opacity:0;}
 }
 
 .typing-dots{
@@ -583,7 +548,7 @@ nav{
 }
 
 @media(max-width:768px){
-  #app.active{
+  #app{
     grid-template-columns:1fr;
   }
   .sidebar{
@@ -598,10 +563,8 @@ nav{
 <body>
 
 <nav>
-  <div class="logo">VidyaAI</div>
-  <div class="nav-r" id="navR">
-    <button class="nbtn primary" onclick="openLogin()" id="loginNavBtn">Login →</button>
-  </div>
+  <div class="logo">VidyaAI <span class="ver">v2.0</span></div>
+  <div class="nav-r"></div>
 </nav>
 
 <div id="app">
@@ -612,27 +575,18 @@ nav{
     </div>
     <div class="s-section">Recent Chats</div>
     <div class="chat-list" id="chatList"><div style="font-size:0.8rem;color:var(--text-muted);padding:12px;">No chats yet</div></div>
-    <div class="sidebar-bottom">
-      <div class="user-pill">
-        <div class="avatar" id="uAvatar">U</div>
-        <div class="user-info">
-          <div class="user-name" id="uName">User</div>
-          <div class="user-email" id="uEmail">user@email.com</div>
-        </div>
-        <button class="logout-btn" onclick="logoutUser()">Logout</button>
-      </div>
-    </div>
+    <div class="sidebar-bottom">Vidya AI Premium · v2.0</div>
   </div>
 
   <div class="chat-main">
     <div class="model-bar">
-      <span style="color:var(--accent-primary);font-weight:700;">🤖 Claude AI</span>
+      <span class="model-chip">✨ Vidya AI Assistant</span>
     </div>
 
     <div id="emptyDiv" class="empty-state">
       <div class="es-logo">💬</div>
       <div class="es-title">Vidya AI Premium</div>
-      <p class="es-sub">Powered by Anthropic Claude. Kuch bhi poochho, kisi bhi language mein!</p>
+      <p class="es-sub">Kuch bhi poochho, kisi bhi language mein!</p>
       <div class="chips">
         <div class="chip" onclick="quickMsg('Mujhe Python mein hello world likhke do')">💻 Python code</div>
         <div class="chip" onclick="quickMsg('Ek creative story shuruaat do')">✨ Story</div>
@@ -656,65 +610,9 @@ nav{
 <div class="toast" id="toast"><span id="tmsg"></span></div>
 
 <script>
-let user=null;
 let msgs=[];
 let chatHist=[];
 const API_URL='https://play-z-ai.crunchfun885.workers.dev/?prompt=';
-
-// Initialize
-window.addEventListener('load',()=>{
-  const savedUser=localStorage.getItem('vidya_user');
-  if(savedUser){
-    try{
-      user=JSON.parse(savedUser);
-      showApp();
-    }catch{
-      logoutUser();
-    }
-  }
-});
-
-function openLogin(){
-  const name=prompt('Aapka naam kya hai?');
-  if(!name||name.trim().length<2){
-    toast('❌ Valid name enter karein','err');
-    return;
-  }
-  const email=prompt('Aapka email?');
-  if(!email||!email.includes('@')){
-    toast('❌ Valid email enter karein','err');
-    return;
-  }
-  user={name:name.trim(),email:email.trim()};
-  localStorage.setItem('vidya_user',JSON.stringify(user));
-  showApp();
-  toast('✅ Welcome '+user.name+'!');
-}
-
-function showApp(){
-  if(!user){
-    toast('❌ Please login first','err');
-    return;
-  }
-  document.getElementById('app').style.display='grid';
-  document.getElementById('loginNavBtn').style.display='none';
-  document.getElementById('uAvatar').textContent=user.name[0].toUpperCase();
-  document.getElementById('uName').textContent=user.name;
-  document.getElementById('uEmail').textContent=user.email;
-}
-
-function logoutUser(){
-  user=null;
-  msgs=[];
-  chatHist=[];
-  localStorage.removeItem('vidya_user');
-  document.getElementById('app').style.display='none';
-  document.getElementById('loginNavBtn').style.display='';
-  document.getElementById('emptyDiv').style.display='flex';
-  document.getElementById('msgsDiv').style.display='none';
-  document.getElementById('msgsDiv').innerHTML='';
-  toast('✅ Logged out');
-}
 
 function newChat(){
   msgs=[];
@@ -738,7 +636,7 @@ function loadChat(i){
   const md=document.getElementById('msgsDiv');
   md.style.display='flex';
   md.innerHTML='';
-  msgs.forEach(m=>appendBubble(m.role,m.content));
+  msgs.forEach(m=>appendBubble(m.role,m.content,false));
   md.scrollTop=md.scrollHeight;
 }
 
@@ -760,15 +658,9 @@ function autoResize(el){
 }
 
 async function sendMsg(){
-  if(!user){
-    toast('❌ Pehle login karein','err');
-    openLogin();
-    return;
-  }
-
   const inp=document.getElementById('chatInput');
   const text=inp.value.trim();
-  
+
   if(!text||text.length>5000){
     if(text.length>5000)toast('❌ Message too long','err');
     return;
@@ -781,7 +673,7 @@ async function sendMsg(){
   md.style.display='flex';
 
   msgs.push({role:'user',content:text});
-  appendBubble('user',text);
+  appendBubble('user',text,false);
 
   const tid='t'+Date.now();
   md.innerHTML+=`<div class="msg ai" id="${tid}"><div class="msg-av ai">🤖</div><div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div></div>`;
@@ -790,47 +682,83 @@ async function sendMsg(){
 
   try{
     const reply=await callAPI(text);
-    document.getElementById(tid)?.remove();
+    const tEl=document.getElementById(tid);
+    if(tEl){
+      tEl.querySelector('.bubble').innerHTML='';
+      await typeOutLines(tEl.querySelector('.bubble'),reply);
+      tEl.removeAttribute('id');
+    }
     msgs.push({role:'assistant',content:reply});
-    appendBubble('ai',reply);
-    
+
     const title=text.slice(0,38)+(text.length>38?'…':'');
     chatHist.unshift({title,msgs:[...msgs]});
     if(chatHist.length>20)chatHist.pop();
     updateHistory();
   }catch(err){
     document.getElementById(tid)?.remove();
-    appendBubble('ai','❌ Error: '+err.message);
+    appendBubble('ai','❌ Error: '+err.message,false);
   }
-  
+
   document.getElementById('sendBtn').disabled=false;
   md.scrollTop=md.scrollHeight;
 }
 
 async function callAPI(prompt){
   const url=API_URL+encodeURIComponent(prompt);
-  
+
   const response=await fetch(url);
   if(!response.ok){
     throw new Error('API Error: '+response.status);
   }
-  
+
   const data=await response.text();
   return data||'(No response)';
 }
 
-function appendBubble(role,text){
-  const md=document.getElementById('msgsDiv');
-  const isAI=role==='ai'||role==='assistant';
-  const av=isAI?'🤖':(user?.name||'U')[0].toUpperCase();
-  const avC=isAI?'ai':'usr';
-  
-  const fmt=text
+function escapeHtml(text){
+  return text
     .replace(/&/g,'&amp;')
     .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/\n/g,'<br>');
-  
+    .replace(/>/g,'&gt;');
+}
+
+// Streams the AI reply into the bubble one line at a time
+async function typeOutLines(bubbleEl,text){
+  const md=document.getElementById('msgsDiv');
+  const lines=text.split('\n');
+  const cursor=document.createElement('span');
+  cursor.className='cursor';
+
+  for(let i=0;i<lines.length;i++){
+    const lineDiv=document.createElement('div');
+    bubbleEl.appendChild(lineDiv);
+    bubbleEl.appendChild(cursor);
+
+    const line=lines[i];
+    let shown='';
+    for(let c=0;c<line.length;c++){
+      shown+=line[c];
+      lineDiv.innerHTML=escapeHtml(shown);
+      md.scrollTop=md.scrollHeight;
+      await sleep(12);
+    }
+    await sleep(80);
+  }
+  cursor.remove();
+}
+
+function sleep(ms){
+  return new Promise(res=>setTimeout(res,ms));
+}
+
+function appendBubble(role,text,animate){
+  const md=document.getElementById('msgsDiv');
+  const isAI=role==='ai'||role==='assistant';
+  const av=isAI?'🤖':'U';
+  const avC=isAI?'ai':'usr';
+
+  const fmt=escapeHtml(text).replace(/\n/g,'<br>');
+
   md.innerHTML+=`<div class="msg ${isAI?'ai':'user'}"><div class="msg-av ${avC}">${av}</div><div class="bubble">${fmt}</div></div>`;
   md.scrollTop=md.scrollHeight;
 }
