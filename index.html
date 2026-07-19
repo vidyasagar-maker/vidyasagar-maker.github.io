@@ -783,7 +783,40 @@ async function callAPI(prompt){
   }
 
   const data=await response.text();
-  return data||'(No response)';
+  return cleanReply(data||'(No response)');
+}
+
+// Unwraps {"message": "..."} JSON envelopes, fixes escaped newlines/quotes,
+// and strips stray "langCopy" labels the API sometimes glues before code fences.
+function cleanReply(raw){
+  let text=raw;
+
+  try{
+    const parsed=JSON.parse(raw);
+    if(parsed && typeof parsed==='object' && typeof parsed.message==='string'){
+      text=parsed.message;
+    }else if(typeof parsed==='string'){
+      text=parsed;
+    }
+  }catch(e){
+    // not JSON, keep raw text
+  }
+
+  // fix any leftover double-escaped sequences
+  text=text
+    .replace(/\\r\\n/g,'\n')
+    .replace(/\\n/g,'\n')
+    .replace(/\\t/g,'\t')
+    .replace(/\\"/g,'"');
+
+  // fold "pythonCopy\n```" style artifacts into "```python"
+  text=text.replace(/(\w+)Copy\s*\n+```(\w*)\n/g,(m,lang,existingLang)=>'```'+(existingLang||lang.toLowerCase())+'\n');
+  // strip any remaining standalone "<word>Copy" lines
+  text=text.replace(/^[ \t]*\w+Copy[ \t]*$/gm,'');
+  // collapse excess blank lines
+  text=text.replace(/\n{3,}/g,'\n\n');
+
+  return text.trim();
 }
 
 function escapeHtml(text){
