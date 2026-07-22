@@ -685,6 +685,56 @@ let msgs=[];
 let chatHist=[];
 const API_URL='https://play-z-ai.crunchfun885.workers.dev/?prompt=';
 
+// Creator identity that should always be shown instead of OpenAI/ChatGPT/etc.
+const CREATOR_NAME='Vidya';
+
+// Detects questions asking who built/trained/owns the bot (Hindi/Hinglish/English)
+const IDENTITY_PATTERNS=[
+  /kisne\s*banaya/i,
+  /kis\s*ne\s*banaya/i,
+  /tumhe\s*kisne/i,
+  /aapko\s*kisne/i,
+  /banane\s*wala/i,
+  /developer\s*kaun/i,
+  /creator\s*kaun/i,
+  /tumhara\s*naam.*kya/i,
+  /aapka\s*naam.*kya/i,
+  /kaun\s*ho\s*tum/i,
+  /kaun\s*ho\s*aap/i,
+  /\bwho\s*made\s*you\b/i,
+  /\bwho\s*created\s*you\b/i,
+  /\bwho\s*built\s*you\b/i,
+  /\bwho\s*developed\s*you\b/i,
+  /\bwho\s*trained\s*you\b/i,
+  /\bwho\s*is\s*your\s*(creator|developer|owner|maker)\b/i,
+  /\bare\s*you\s*(chatgpt|gpt|openai|open\s*ai)\b/i,
+  /\byour\s*creator\b/i,
+  /\byour\s*developer\b/i,
+  /\bmade\s*by\s*openai\b/i,
+  /\bwhat.?s\s*your\s*name\b/i,
+  /\bwho\s*are\s*you\b/i
+];
+
+function isIdentityQuestion(text){
+  return IDENTITY_PATTERNS.some(re=>re.test(text));
+}
+
+function identityReply(){
+  return `Mujhe **${CREATOR_NAME}** ne banaya hai! Main ${CREATOR_NAME} ka apna AI assistant hoon, VidyaAI. Aur kuch jaanna hai?`;
+}
+
+// Strips/replaces any mention of other AI providers so replies stay consistent
+function sanitizeIdentity(text){
+  return text
+    .replace(/\bOpenAI\b/gi,CREATOR_NAME)
+    .replace(/\bChatGPT\b/gi,'VidyaAI')
+    .replace(/\bOpen\s*AI\b/gi,CREATOR_NAME)
+    .replace(/\bGPT-?\d(\.\d)?\b/gi,'VidyaAI')
+    .replace(/\bAnthropic\b/gi,CREATOR_NAME)
+    .replace(/\bClaude\b/gi,'VidyaAI')
+    .replace(/\bGoogle\b(?=.{0,15}(train|develop|creat|built|made))/gi,CREATOR_NAME);
+}
+
 function newChat(){
   msgs=[];
   document.getElementById('emptyDiv').style.display='flex';
@@ -775,6 +825,10 @@ async function sendMsg(){
 }
 
 async function callAPI(prompt){
+  if(isIdentityQuestion(prompt)){
+    return identityReply();
+  }
+
   const url=API_URL+encodeURIComponent(prompt);
 
   const response=await fetch(url);
@@ -783,7 +837,7 @@ async function callAPI(prompt){
   }
 
   const data=await response.text();
-  return cleanReply(data||'(No response)');
+  return sanitizeIdentity(cleanReply(data||'(No response)'));
 }
 
 // Unwraps {"message": "..."} JSON envelopes, fixes escaped newlines/quotes,
@@ -878,7 +932,7 @@ async function typeOutLines(bubbleEl,text){
       const codeId='code'+Date.now()+copyCounter;
       const block=document.createElement('div');
       block.className='code-block';
-      block.innerHTML=`<div class="code-header"><span>${escapeHtml(seg.lang)}</span><button class="code-copy-btn" onclick="copyCode('${codeId}')">Copy</button></div><pre><code id="${codeId}"></code></pre>`;
+      block.innerHTML=`<div class="code-header"><span>${escapeHtml(seg.lang)}</span><button class="code-copy-btn" onclick="copyCode('${codeId}')">Copy</button></div><pre><code id="${codeId}"></code></pre></div>`;
       bubbleEl.appendChild(block);
       const codeEl=block.querySelector('code');
       const lines=seg.content.split('\n');
